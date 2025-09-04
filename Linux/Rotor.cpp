@@ -17,30 +17,45 @@
 #include <stdio.h>
 #include <time.h>
 #ifndef WIN64
-#include <pthread.h>
-#include <mutex>
+#include <cstdio>
 #include <cstdarg>
-#endif
+#include <mutex>
+#include <thread>
+#include <chrono>
 
 std::mutex print_mtx;
 
-// 한 줄 상태 출력
+// 상태 출력 함수 (루프 안에서 호출)
 void print_status(const char* fmt, ...) {
     std::lock_guard<std::mutex> lock(print_mtx);
-    printf("\r\033[K"); // 줄 앞으로 이동 + 뒤쪽 지우기
+
+    // 커서를 줄 맨 앞으로 이동 + 현재 줄 지우기
+    printf("\r\033[K");
+
     va_list args;
     va_start(args, fmt);
     vprintf(fmt, args);
     va_end(args);
-    fflush(stdout);
+
+    fflush(stdout); // 즉시 반영
 }
 
-// 종료 시 줄바꿈
+// 루프 종료 후 마지막에 호출 (줄바꿈)
 void finish_status_line() {
     std::lock_guard<std::mutex> lock(print_mtx);
     printf("\n");
     fflush(stdout);
 }
+
+int main() {
+    for (int i = 0; i <= 100; i += 10) {
+        print_status("[진행률] %3d%% 완료", i);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    }
+    finish_status_line();
+    return 0;
+}
+
 using namespace std;
 
 Point Gn[CPU_GRP_SIZE / 2];
