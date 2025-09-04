@@ -18,8 +18,29 @@
 #include <time.h>
 #ifndef WIN64
 #include <pthread.h>
+#include <mutex>
+#include <cstdarg>
 #endif
 
+std::mutex print_mtx;
+
+// 한 줄 상태 출력
+void print_status(const char* fmt, ...) {
+    std::lock_guard<std::mutex> lock(print_mtx);
+    printf("\r\033[K"); // 줄 앞으로 이동 + 뒤쪽 지우기
+    va_list args;
+    va_start(args, fmt);
+    vprintf(fmt, args);
+    va_end(args);
+    fflush(stdout);
+}
+
+// 종료 시 줄바꿈
+void finish_status_line() {
+    std::lock_guard<std::mutex> lock(print_mtx);
+    printf("\n");
+    fflush(stdout);
+}
 using namespace std;
 
 Point Gn[CPU_GRP_SIZE / 2];
@@ -1773,7 +1794,7 @@ if (years88 >= 0) { // 시작 직후에도 출력
                     if (isAlive(params)) {
                         if (avgGpuKeyRate > 1000000000) {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Gk/s] [T: %s]%-40s",
+                            print_status("  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Gk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rKeyCount,
                                 rhex.GetBase16().c_str(),
@@ -1783,7 +1804,7 @@ if (years88 >= 0) { // 시작 직후에도 출력
                                 "");
                         } else {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Mk/s] [T: %s]%-40s",
+                            print_status("  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Mk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rKeyCount,
                                 rhex.GetBase16().c_str(),
@@ -1792,13 +1813,12 @@ if (years88 >= 0) { // 시작 직후에도 출력
                                 formatThousands(count).c_str(),
                                 "");
                         }
-                        fflush(stdout);
                     }
                 } else {
                     if (avgGpuKeyRate > 1000000000) {
                         if (isAlive(params)) {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Gk/s] [T: %s]%-40s",
+                            print_status("  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Gk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rhex.GetBase16().c_str(),
                                 nbFoundKey,
@@ -1806,12 +1826,11 @@ if (years88 >= 0) { // 시작 직후에도 출력
                                 avgGpuKeyRate / 1000000000.0,
                                 formatThousands(count).c_str(),
                                 "");
-                            fflush(stdout);
                         }
                     } else {
                         if (isAlive(params)) {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Mk/s] [T: %s]%-40s",
+                            print_status("  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Mk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rhex.GetBase16().c_str(),
                                 nbFoundKey,
@@ -1819,7 +1838,6 @@ if (years88 >= 0) { // 시작 직후에도 출력
                                 avgGpuKeyRate / 1000000.0,
                                 formatThousands(count).c_str(),
                                 "");
-                            fflush(stdout);
                         }
                     }
                 }
@@ -1828,7 +1846,7 @@ if (years88 >= 0) { // 시작 직후에도 출력
                     if (isAlive(params)) {
                         if (avgGpuKeyRate > 1000000000) {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] [R: %llu] %s [F: %d] [CPU %d: %.2f Gk/s] [T: %s]%-40s",
+                            print_status("  [%s] [R: %llu] %s [F: %d] [CPU %d: %.2f Gk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rKeyCount,
                                 rhex.GetBase16().c_str(),
@@ -1839,7 +1857,7 @@ if (years88 >= 0) { // 시작 직후에도 출력
                                 "");
                         } else {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] [R: %llu] %s [F: %d] [CPU %d: %.2f Mk/s] [T: %s]%-40s",
+                            print_status("  [%s] [R: %llu] %s [F: %d] [CPU %d: %.2f Mk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rKeyCount,
                                 rhex.GetBase16().c_str(),
@@ -1849,13 +1867,12 @@ if (years88 >= 0) { // 시작 직후에도 출력
                                 formatThousands(count).c_str(),
                                 "");
                         }
-                        fflush(stdout);
                     }
                 } else {
                     if (avgGpuKeyRate > 1000000000) {
                         if (isAlive(params)) {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] %s [F: %d] [C: %lf %%] [CPU %d: %.2f Gk/s] [T: %s]%-40s",
+                            print_status("  [%s] %s [F: %d] [C: %lf %%] [CPU %d: %.2f Gk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rhex.GetBase16().c_str(),
                                 nbFoundKey,
@@ -1864,12 +1881,11 @@ if (years88 >= 0) { // 시작 직후에도 출력
                                 avgKeyRate / 1000000000.0,
                                 formatThousands(count).c_str(),
                                 "");
-                            fflush(stdout);
                         }
                     } else {
                         if (isAlive(params)) {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] %s [F: %d] [C: %lf %%] [CPU %d: %.2f Mk/s] [T: %s]%-40s",
+                            print_status("  [%s] %s [F: %d] [C: %lf %%] [CPU %d: %.2f Mk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rhex.GetBase16().c_str(),
                                 nbFoundKey,
@@ -1878,7 +1894,6 @@ if (years88 >= 0) { // 시작 직후에도 출력
                                 avgKeyRate / 1000000.0,
                                 formatThousands(count).c_str(),
                                 "");
-                            fflush(stdout);
                         }
                     }
                 }
@@ -1892,7 +1907,7 @@ if (years88 >= 0) { // 시작 직후에도 출력
                 if (isAlive(params)) {
                     if (avgGpuKeyRate > 1000000000) {
                         memset(timeStr, '\0', 256);
-                        printf("\r  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Gk/s] [T: %s]%-40s",
+                        print_status("  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Gk/s] [T: %s]%-40s",
                             toTimeStr(t1, timeStr),
                             rKeyCount,
                             rhex.GetBase16().c_str(),
@@ -1902,7 +1917,7 @@ if (years88 >= 0) { // 시작 직후에도 출력
                             "");
                     } else {
                         memset(timeStr, '\0', 256);
-                        printf("\r  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Mk/s] [T: %s]%-40s",
+                        print_status("  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Mk/s] [T: %s]%-40s",
                             toTimeStr(t1, timeStr),
                             rKeyCount,
                             rhex.GetBase16().c_str(),
@@ -1911,13 +1926,12 @@ if (years88 >= 0) { // 시작 직후에도 출력
                             formatThousands(count).c_str(),
                             "");
                     }
-                    fflush(stdout);
                 }
             } else {
                 if (avgGpuKeyRate > 1000000000) {
                     if (isAlive(params)) {
                         memset(timeStr, '\0', 256);
-                        printf("\r  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Gk/s] [T: %s]%-40s",
+                        print_status("  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Gk/s] [T: %s]%-40s",
                             toTimeStr(t1, timeStr),
                             rhex.GetBase16().c_str(),
                             nbFoundKey,
@@ -1925,12 +1939,11 @@ if (years88 >= 0) { // 시작 직후에도 출력
                             avgGpuKeyRate / 1000000000.0,
                             formatThousands(count).c_str(),
                             "");
-                        fflush(stdout);
                     }
                 } else {
                     if (isAlive(params)) {
                         memset(timeStr, '\0', 256);
-                        printf("\r  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Mk/s] [T: %s]%-40s",
+                        print_status("  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Mk/s] [T: %s]%-40s",
                             toTimeStr(t1, timeStr),
                             rhex.GetBase16().c_str(),
                             nbFoundKey,
@@ -1938,13 +1951,13 @@ if (years88 >= 0) { // 시작 직후에도 출력
                             avgGpuKeyRate / 1000000.0,
                             formatThousands(count).c_str(),
                             "");
-                        fflush(stdout);
                     }
                 }
             }
         }
     }
 }
+finish_status_line();
 		
 		if (rKey > 0) {
 			if ((count - lastrKey) > (1000000000 * rKey)) {
