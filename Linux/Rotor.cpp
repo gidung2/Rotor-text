@@ -1765,62 +1765,60 @@ void Rotor::Search(int nbThread, std::vector<int> gpuId, std::vector<int> gridSi
 			}
 		}
 		
-		if (years88 >= 0) { // 시작 직후에도 출력
+if (years88 >= 0) { // 시작 직후에도 출력
     if (display >= 0) { // -d 0도 허용
-
         if (years88 > 0) {
-
             if (nbit2 < 1) {
-
                 if (rKey > 0) {
-
                     if (isAlive(params)) {
-
                         if (avgGpuKeyRate > 1000000000) {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Gk/s] [T: %s]  ",
+                            printf("\r  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Gk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rKeyCount,
                                 rhex.GetBase16().c_str(),
                                 nbFoundKey,
                                 avgGpuKeyRate / 1000000000.0,
-                                formatThousands(count).c_str());
+                                formatThousands(count).c_str(),
+                                "");
                         } else {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Mk/s] [T: %s]  ",
+                            printf("\r  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Mk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rKeyCount,
                                 rhex.GetBase16().c_str(),
                                 nbFoundKey,
                                 avgGpuKeyRate / 1000000.0,
-                                formatThousands(count).c_str());
+                                formatThousands(count).c_str(),
+                                "");
                         }
                         fflush(stdout);
                     }
                 } else {
-                    string skoka = "";
                     if (avgGpuKeyRate > 1000000000) {
                         if (isAlive(params)) {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Gk/s] [T: %s]  ",
+                            printf("\r  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Gk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rhex.GetBase16().c_str(),
                                 nbFoundKey,
                                 completedPerc,
                                 avgGpuKeyRate / 1000000000.0,
-                                formatThousands(count).c_str());
+                                formatThousands(count).c_str(),
+                                "");
                             fflush(stdout);
                         }
                     } else {
                         if (isAlive(params)) {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Mk/s] [T: %s]  ",
+                            printf("\r  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Mk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rhex.GetBase16().c_str(),
                                 nbFoundKey,
                                 completedPerc,
                                 avgGpuKeyRate / 1000000.0,
-                                formatThousands(count).c_str());
+                                formatThousands(count).c_str(),
+                                "");
                             fflush(stdout);
                         }
                     }
@@ -1830,24 +1828,26 @@ void Rotor::Search(int nbThread, std::vector<int> gpuId, std::vector<int> gridSi
                     if (isAlive(params)) {
                         if (avgGpuKeyRate > 1000000000) {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] [R: %llu] %s [F: %d] [CPU %d: %.2f Gk/s] [T: %s]  ",
+                            printf("\r  [%s] [R: %llu] %s [F: %d] [CPU %d: %.2f Gk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rKeyCount,
                                 rhex.GetBase16().c_str(),
                                 nbFoundKey,
                                 nbit2,
                                 avgKeyRate / 1000000000.0,
-                                formatThousands(count).c_str());
+                                formatThousands(count).c_str(),
+                                "");
                         } else {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] [R: %llu] %s [F: %d] [CPU %d: %.2f Mk/s] [T: %s]  ",
+                            printf("\r  [%s] [R: %llu] %s [F: %d] [CPU %d: %.2f Mk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rKeyCount,
                                 rhex.GetBase16().c_str(),
                                 nbFoundKey,
                                 nbit2,
                                 avgKeyRate / 1000000.0,
-                                formatThousands(count).c_str());
+                                formatThousands(count).c_str(),
+                                "");
                         }
                         fflush(stdout);
                     }
@@ -1855,94 +1855,89 @@ void Rotor::Search(int nbThread, std::vector<int> gpuId, std::vector<int> gridSi
                     if (avgGpuKeyRate > 1000000000) {
                         if (isAlive(params)) {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] %s [F: %d] [C: %lf %%] [CPU %d: %.2f Gk/s] [T: %s]  ",
+                            printf("\r  [%s] %s [F: %d] [C: %lf %%] [CPU %d: %.2f Gk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rhex.GetBase16().c_str(),
                                 nbFoundKey,
                                 completedPerc,
                                 nbit2,
                                 avgKeyRate / 1000000000.0,
-                                formatThousands(count).c_str());
+                                formatThousands(count).c_str(),
+                                "");
                             fflush(stdout);
                         }
                     } else {
                         if (isAlive(params)) {
                             memset(timeStr, '\0', 256);
-                            printf("\r  [%s] %s [F: %d] [C: %lf %%] [CPU %d: %.2f Mk/s] [T: %s]  ",
+                            printf("\r  [%s] %s [F: %d] [C: %lf %%] [CPU %d: %.2f Mk/s] [T: %s]%-40s",
                                 toTimeStr(t1, timeStr),
                                 rhex.GetBase16().c_str(),
                                 nbFoundKey,
                                 completedPerc,
                                 nbit2,
                                 avgKeyRate / 1000000.0,
-                                formatThousands(count).c_str());
+                                formatThousands(count).c_str(),
+                                "");
                             fflush(stdout);
                         }
                     }
                 }
             }
         }
-        // days88 쪽 분기도 동일하게 fflush 적용
     }
-}
-else {
-
+} else {
     if (days88 > 0) {
-
         if (nbit2 < 1) {
-
             if (rKey > 0) {
-
                 if (isAlive(params)) {
-
                     if (avgGpuKeyRate > 1000000000) {
                         memset(timeStr, '\0', 256);
-                        printf("\r  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Gk/s] [T: %s]  ",
+                        printf("\r  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Gk/s] [T: %s]%-40s",
                             toTimeStr(t1, timeStr),
                             rKeyCount,
                             rhex.GetBase16().c_str(),
                             nbFoundKey,
                             avgGpuKeyRate / 1000000000.0,
-                            formatThousands(count).c_str());
+                            formatThousands(count).c_str(),
+                            "");
                     } else {
                         memset(timeStr, '\0', 256);
-                        printf("\r  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Mk/s] [T: %s]  ",
+                        printf("\r  [%s] [R: %llu] %s [F: %d] [GPU: %.2f Mk/s] [T: %s]%-40s",
                             toTimeStr(t1, timeStr),
                             rKeyCount,
                             rhex.GetBase16().c_str(),
                             nbFoundKey,
                             avgGpuKeyRate / 1000000.0,
-                            formatThousands(count).c_str());
+                            formatThousands(count).c_str(),
+                            "");
                     }
-                    fflush(stdout); // 즉시 출력
+                    fflush(stdout);
                 }
             } else {
-
-                string skoka = "";
                 if (avgGpuKeyRate > 1000000000) {
-
                     if (isAlive(params)) {
                         memset(timeStr, '\0', 256);
-                        printf("\r  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Gk/s] [T: %s]  ",
+                        printf("\r  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Gk/s] [T: %s]%-40s",
                             toTimeStr(t1, timeStr),
                             rhex.GetBase16().c_str(),
                             nbFoundKey,
                             completedPerc,
                             avgGpuKeyRate / 1000000000.0,
-                            formatThousands(count).c_str());
+                            formatThousands(count).c_str(),
+                            "");
                         fflush(stdout);
                     }
                 } else {
-
                     if (isAlive(params)) {
                         memset(timeStr, '\0', 256);
-                        printf("\r  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Mk/s] [T: %s]  ",
+                        printf("\r  [%s] %s [F: %d] [C: %lf %%] [GPU: %.2f Mk/s] [T: %s]%-40s",
                             toTimeStr(t1, timeStr),
                             rhex.GetBase16().c_str(),
                             nbFoundKey,
                             completedPerc,
                             avgGpuKeyRate / 1000000.0,
-                            formatThousands(count).c_str());
+                            formatThousands(count).c_str(),
+                            "");
                         fflush(stdout);
                     }
                 }
@@ -1950,7 +1945,6 @@ else {
         }
     }
 }
-
 		
 		if (rKey > 0) {
 			if ((count - lastrKey) > (1000000000 * rKey)) {
